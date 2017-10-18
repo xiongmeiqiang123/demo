@@ -86,10 +86,10 @@ class AppComponent extends React.Component {
                     <h2  style={{color: 'white'}}>
                         层合板性能(Mpa)
                     </h2>
-                    <Input type='number' style={inputStyle} value={state.E1} onChange={e=>this.setState({E1:e.target.value})}></Input>
-                    <Input type='number' style={inputStyle} value={state.E2} onChange={e=>this.setState({E2:e.target.value})}></Input>
-                    <Input type='number' style={inputStyle} value={state.G12} onChange={e=>this.setState({G12:e.target.value})}></Input>
-                    <Input type='number' style={inputStyle} value={state.V12} onChange={e=>this.setState({EV12:e.target.value})}></Input>
+                    <Input type='number' style={inputStyle} value={state.E1} onChange={e=>this.setState({E1:e.target.value, a11: 1/e.target.value})}></Input>
+                    <Input type='number' style={inputStyle} value={state.E2} onChange={e=>this.setState({E2:e.target.value, a22: 1/e.target.value, a12: -state.V12/e.target.value})}></Input>
+                    <Input type='number' style={inputStyle} value={state.G12} onChange={e=>this.setState({G12:e.target.value, a66: 1/e.target.value})}></Input>
+                    <Input type='number' style={inputStyle} value={state.V12} onChange={e=>this.setState({V12:e.target.value, a12: -e.target.value/state.E2})}></Input>
                 </div>
 
                 <div>
