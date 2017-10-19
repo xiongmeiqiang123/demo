@@ -117,12 +117,12 @@ class AppComponent extends React.Component {
         const A = Complex(a, 0)
 
         const Z_k = X['+'](Y['*'](Mu))
-
+        debugger;
         let t1 = Mu_3_k['*'](Sigma_y)['+'](Tau_xy);
         let t2 = Complex.I['*'](C)['*'](Mu_3_k['*'](Tau_xy)['+'](Sigma_x))
 
         let t3 = t1['-'](t2)
-        let t4 = Complex(2, 0)['*']
+        let t4 = Complex(2, 0)['*'](C)
 
         let left = t3['/'](t4)
 
@@ -136,7 +136,7 @@ class AppComponent extends React.Component {
         let right = Complex(1, 0)['/'](t9)
 
         let result = left['*'](middle)['*'](right)
-
+        console.log(result,'test');
         return result;
 
 
@@ -176,8 +176,8 @@ class AppComponent extends React.Component {
             </Col>
             <Col span={12} offset={1} >
                 <div style={{textAlign: 'center', margin: 10}}>
-                    <label htmlFor="" style={{...labelStyle, width: 20}}>a:</label><InputNumber type='number'  key='1' style={{width: 100}} value={state.x} onChange={e=>this.setState({x:e}, this.caculate)}></InputNumber>
-                    <label htmlFor="" style={{...labelStyle, width: 20, marginLeft: 20}}>a:</label><InputNumber type='number'  key='3' style={{width: 100}} value={state.y} onChange={e=>this.setState({y:e}, this.caculate)}></InputNumber>
+                    <label htmlFor="" style={{...labelStyle, width: 20}}>x:</label><InputNumber type='number'  key='1' style={{width: 100}} value={state.x} onChange={e=>this.setState({x:e}, this.caculate)}></InputNumber>
+                    <label htmlFor="" style={{...labelStyle, width: 20, marginLeft: 20}}>y:</label><InputNumber type='number'  key='3' style={{width: 100}} value={state.y} onChange={e=>this.setState({y:e}, this.caculate)}></InputNumber>
                 </div>
                 <Table columns={columns}></Table>
             </Col>
