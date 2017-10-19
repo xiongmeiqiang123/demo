@@ -123,7 +123,7 @@ class AppComponent extends React.Component {
             return ;
         }
         this.setState({
-            resultData: [...resultData, {x, y, sigma_x_re, sigma_y_re, tau_xy_re}]
+            resultData: [ {x, y, sigma_x_re, sigma_y_re, tau_xy_re}, ...resultData]
         })
     }
 
