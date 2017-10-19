@@ -15,6 +15,11 @@ const inputStyle = {
     margin: '5px 0',
     width: '80%'
 }
+const labelStyle ={
+    color: 'white',
+    display: 'inline-block',
+    width: '15%'
+}
 
 const columns = [
     {
@@ -27,15 +32,15 @@ const columns = [
     },
     {
         title: `${String.fromCharCode(963)}x`,
-        dataIndex: 'x'
+        dataIndex: 'sigma_x'
     },
     {
         title: `${String.fromCharCode(963)}y`,
-        dataIndex: 'x'
+        dataIndex: 'sigma_y'
     },
     {
         title: `${String.fromCharCode(964)}xy`,
-        dataIndex: 'x'
+        dataIndex: 'tau_xy'
     },
 ]
 let a  = 1;
@@ -74,7 +79,6 @@ class AppComponent extends React.Component {
         const {a11, a16, a66, a22, a12} = this.state;
 
         let result = quad4solve(a11, 0, 2*a12 + a66, 0, a22)
-        console.log('0');
         if(!result) {
             return;
         }
@@ -83,7 +87,7 @@ class AppComponent extends React.Component {
             Mu_2 = Complex(result.x3.Re, result.x3.Im),
             Mu_3 = Complex(result.x2.Re, result.x2.Im),
             Mu_4 = Complex(result.x4.Re, result.x4.Im);
-            console.log('1');
+
         this.setState({
             Mu_1,
             Mu_2,
@@ -97,9 +101,7 @@ class AppComponent extends React.Component {
         const {Mu_1, Mu_2, sigma_x, sigma_y, tau_xy, x, y, a, c} = this.state;
         let fai_1 = this.getFai({Mu_1, Mu_2, sigma_x, sigma_y, tau_xy, x, y, a, c, k:1})
         let fai_2 = this.getFai({Mu_1, Mu_2, sigma_x, sigma_y, tau_xy, x, y, a, c, k:2})
-        console.log({Mu_1, Mu_2, sigma_x, sigma_y, tau_xy, x, y, a, c, k:2});
-        console.log(fai_2,  '-----');
-        console.log(fai_1, '-----');
+
     }
 
     getFai=(data={})=>{
@@ -116,7 +118,7 @@ class AppComponent extends React.Component {
 
         const Z_k = X['+'](Y['*'](Mu))
 
-        let t1 = Mu_3_k['*'](Sigma_x)['+'](Tau_xy);
+        let t1 = Mu_3_k['*'](Sigma_y)['+'](Tau_xy);
         let t2 = Complex.I['*'](C)['*'](Mu_3_k['*'](Tau_xy)['+'](Sigma_x))
 
         let t3 = t1['-'](t2)
@@ -149,33 +151,35 @@ class AppComponent extends React.Component {
                     <h2 style={{color: 'white'}}>
                         孔尺寸(mm)
                     </h2>
-                        <InputNumber type='number' key='1' style={inputStyle} value={state.a} onChange={e=>this.setState({a:e}, this.caculate)}></InputNumber>
-                        <InputNumber type='number' key='2' style={inputStyle} value={state.c} onChange={e=>this.setState({c:e}, this.caculate)}></InputNumber>
-                        <InputNumber type='number' key='3' style={inputStyle} value={state.w} onChange={e=>this.setState({w:e}, this.caculate)}></InputNumber>
+                        <label htmlFor="" style={labelStyle}>a:</label><InputNumber type='number' key='1' style={inputStyle} value={state.a} onChange={e=>this.setState({a:e}, this.caculate)}></InputNumber>
+                        <label htmlFor="" style={labelStyle}>c:</label><InputNumber type='number' key='2' style={inputStyle} value={state.c} onChange={e=>this.setState({c:e}, this.caculate)}></InputNumber>
+                        <label htmlFor="" style={labelStyle}>w:</label><InputNumber type='number' key='3' style={inputStyle} value={state.w} onChange={e=>this.setState({w:e}, this.caculate)}></InputNumber>
                 </div>
                 <div>
                     <h2  style={{color: 'white'}}>
                         层合板性能(Mpa)
                     </h2>
-                    <InputNumber type='number' key='4' style={inputStyle} value={state.E1} onChange={e=>this.setState({E1:e, a11: 1/e}, this.caculate)}></InputNumber>
-                    <InputNumber type='number' key='5' style={inputStyle} value={state.E2} onChange={e=>this.setState({E2:e, a22: 1/e, a12: -state.V12/e}, this.caculate)}></InputNumber>
-                    <InputNumber type='number' key='6' style={inputStyle} value={state.G12} onChange={e=>this.setState({G12:e, a66: 1/e}, this.caculate)}></InputNumber>
-                    <InputNumber type='number' key='7' style={inputStyle} value={state.V12} onChange={e=>this.setState({V12:e, a12: -e/state.E2}, this.caculate)}></InputNumber>
+                    <label htmlFor="" style={labelStyle}>E1:</label><InputNumber type='number' key='4' style={inputStyle} value={state.E1} onChange={e=>this.setState({E1:e, a11: 1/e}, this.caculate)}></InputNumber>
+                    <label htmlFor="" style={labelStyle}>E2:</label><InputNumber type='number' key='5' style={inputStyle} value={state.E2} onChange={e=>this.setState({E2:e, a22: 1/e, a12: -state.V12/e}, this.caculate)}></InputNumber>
+                    <label htmlFor="" style={labelStyle}>G12:</label><InputNumber type='number' key='6' style={inputStyle} value={state.G12} onChange={e=>this.setState({G12:e, a66: 1/e}, this.caculate)}></InputNumber>
+                    <label htmlFor="" style={labelStyle}>V12:</label><InputNumber type='number' key='7' style={inputStyle} value={state.V12} onChange={e=>this.setState({V12:e, a12: -e/state.E2}, this.caculate)}></InputNumber>
                 </div>
 
                 <div>
                     <h2 style={{color: 'white'}}>
                         远场应力(Mpa)
                     </h2>
-                    <InputNumber type='number' key='1' style={inputStyle} value={state.sigma_x} onChange={e=>this.setState({sigma_x:e}, this.caculate)}></InputNumber>
-                    <InputNumber type='number' key='2' style={inputStyle} value={state.sigma_y} onChange={e=>this.setState({sigma_y:e}, this.caculate)}></InputNumber>
-                    <InputNumber type='number' key='3' style={inputStyle} value={state.tau_xy} onChange={e=>this.setState({tau_xy:e}, this.caculate)}></InputNumber>
+                    <label htmlFor="" style={labelStyle}>&sigma;ｘ:</label><InputNumber type='number' key='1' style={inputStyle} value={state.sigma_x} onChange={e=>this.setState({sigma_x:e}, this.caculate)}></InputNumber>
+                    <label htmlFor="" style={labelStyle}>&sigma;y:</label><InputNumber type='number' key='2' style={inputStyle} value={state.sigma_y} onChange={e=>this.setState({sigma_y:e}, this.caculate)}></InputNumber>
+                    <label htmlFor="" style={labelStyle}>&tau;xy:</label><InputNumber type='number' key='3' style={inputStyle} value={state.tau_xy} onChange={e=>this.setState({tau_xy:e}, this.caculate)}></InputNumber>
                 </div>
             </Col>
-            <Col span={12} offset={1}>
-                <InputNumber type='number'  key='1' style={inputStyle} value={state.x} onChange={e=>this.setState({x:e}, this.caculate)}></InputNumber>
-                <InputNumber type='number'  key='3' style={inputStyle} value={state.y} onChange={e=>this.setState({y:e}, this.caculate)}></InputNumber>
-                // <Table columns={columns}></Table>
+            <Col span={12} offset={1} >
+                <div style={{textAlign: 'center', margin: 10}}>
+                    <label htmlFor="" style={{...labelStyle, width: 20}}>a:</label><InputNumber type='number'  key='1' style={{width: 100}} value={state.x} onChange={e=>this.setState({x:e}, this.caculate)}></InputNumber>
+                    <label htmlFor="" style={{...labelStyle, width: 20, marginLeft: 20}}>a:</label><InputNumber type='number'  key='3' style={{width: 100}} value={state.y} onChange={e=>this.setState({y:e}, this.caculate)}></InputNumber>
+                </div>
+                <Table columns={columns}></Table>
             </Col>
         </Row>
       </div>
