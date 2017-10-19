@@ -6,37 +6,6 @@ import 'antd/dist/antd.css'
 import {InputNumber, Row, Col, Table} from 'antd';
 import quad4solve from './math.js'
 import Complex from 'complex-js'
-// let yeomanImage = require('../images/yeoman.png');
-console.log(Complex.I['*'](Complex.I)['+'](Complex(0, 1)), 'Complex.I');
-function getResult(a = 0, b = 0, c = 0) {
-  let flag = b * b - 4 * a * c;
-  var x1 = {
-      a: 0,
-      i: 0
-    },
-    x2 = {
-      a: 0,
-      i: 0
-    };
-
-  if (flag === 0) {
-    x1.a = x2.a = -b / (2 * a)
-  }
-
-  if (flag > 0) {
-    x1.a = (-b + Math.sqrt(b * b - flag)) / (2 * a)
-    x2.a = (-b - Math.sqrt(b * b - flag)) / (2 * a)
-  }
-
-  if (flag < 0) {
-    x1.a = x2.a = -b / (2 * a);
-    x1.i = Math.sqrt(4 * a * c - b * b) / (2 * a)
-    x2.i = -Math.sqrt(4 * a * c - b * b) / (2 * a)
-  }
-
-  return {x1, x2}
-}
-
 // a11=1/E1
 // a22=1/E2
 // a66=1/G12
