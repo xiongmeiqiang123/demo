@@ -3,7 +3,7 @@ require('styles/App.css');
 
 import React from 'react';
 import 'antd/dist/antd.css'
-import {InputNumber, Row, Col, Table} from 'antd';
+import {InputNumber, Row, Col, Table, Button} from 'antd';
 import quad4solve from './math.js'
 import Complex from 'complex-js'
 // a11=1/E1
@@ -32,15 +32,15 @@ const columns = [
     },
     {
         title: `${String.fromCharCode(963)}x`,
-        dataIndex: 'sigma_x'
+        dataIndex: 'sigma_x_re'
     },
     {
         title: `${String.fromCharCode(963)}y`,
-        dataIndex: 'sigma_y'
+        dataIndex: 'sigma_y_re'
     },
     {
         title: `${String.fromCharCode(964)}xy`,
-        dataIndex: 'tau_xy'
+        dataIndex: 'tau_xy_re'
     },
 ]
 let a  = 1;
@@ -99,9 +99,32 @@ class AppComponent extends React.Component {
 
     getResult=()=>{
         const {Mu_1, Mu_2, sigma_x, sigma_y, tau_xy, x, y, a, c} = this.state;
-        let fai_1 = this.getFai({Mu_1, Mu_2, sigma_x, sigma_y, tau_xy, x, y, a, c, k:1})
-        let fai_2 = this.getFai({Mu_1, Mu_2, sigma_x, sigma_y, tau_xy, x, y, a, c, k:2})
+        let Fai_1 = this.getFai({Mu_1, Mu_2, sigma_x, sigma_y, tau_xy, x, y, a, c, k:1})
+        let Fai_2 = this.getFai({Mu_1, Mu_2, sigma_x, sigma_y, tau_xy, x, y, a, c, k:2})
 
+        let Sigma_x_reusult = Mu_1['*'](Mu_1)['*'](Fai_1)['+'](  Mu_2['*'](Mu_2)['*'](Fai_2))
+        let Sigma_y_resuilt = (Fai_1)['+']( Fai_2)
+        let Tau_xy_result =  (Mu_1)['*'](Fai_1)['+']((Mu_2)['*'](Fai_2))
+
+        let sigma_x_re = 2*Sigma_x_reusult.real
+        let sigma_y_re = 2*Sigma_y_resuilt.real
+        let tau_xy_re = -2*Tau_xy_result.real
+
+        this.setState({
+            sigma_x_re,
+            sigma_y_re,
+            tau_xy_re
+        })
+    }
+
+    onClickCaculate=()=>{
+        const {x, y, sigma_x_re, sigma_y_re, tau_xy_re, resultData=[]} = this.state;
+        if(!sigma_x_re || !sigma_y_re || !tau_xy_re){
+            return ;
+        }
+        this.setState({
+            resultData: [...resultData, {x, y, sigma_x_re, sigma_y_re, tau_xy_re}]
+        })
     }
 
     getFai=(data={})=>{
@@ -136,7 +159,6 @@ class AppComponent extends React.Component {
         let right = Complex(1, 0)['/'](t9)
 
         let result = left['*'](middle)['*'](right)
-        console.log(result,'test');
         return result;
 
 
@@ -178,8 +200,10 @@ class AppComponent extends React.Component {
                 <div style={{textAlign: 'center', margin: 10}}>
                     <label htmlFor="" style={{...labelStyle, width: 20}}>x:</label><InputNumber type='number'  key='1' style={{width: 100}} value={state.x} onChange={e=>this.setState({x:e}, this.caculate)}></InputNumber>
                     <label htmlFor="" style={{...labelStyle, width: 20, marginLeft: 20}}>y:</label><InputNumber type='number'  key='3' style={{width: 100}} value={state.y} onChange={e=>this.setState({y:e}, this.caculate)}></InputNumber>
+
+                    <Button style={{margin:5}} onClick={this.onClickCaculate}>计算</Button>
                 </div>
-                <Table columns={columns}></Table>
+                <Table columns={columns} dataSource={state.resultData} style={{background: 'white'}}></Table>
             </Col>
         </Row>
       </div>
